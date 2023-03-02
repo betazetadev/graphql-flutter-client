@@ -1,4 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:graphql_flutter_client/util/string_extensions.dart';
+import '../model/film.dart';
+
+String createFilmMutation = r"""
+  mutation NewFilmMutation($film: film_insert_input = {}) {
+    insert_film_one(object: $film) {
+      film_id
+      title
+      description
+      release_year
+      language_id
+      original_language_id
+      rental_duration
+      rental_rate
+      length
+      replacement_cost
+      rating
+      last_update
+      special_features
+      fulltext
+    }
+  }
+""";
 
 class NewFilmFormWidget extends StatefulWidget {
   const NewFilmFormWidget({super.key});
@@ -10,7 +34,7 @@ class NewFilmFormWidget extends StatefulWidget {
 class NewFilmFormWidgetState extends State<NewFilmFormWidget> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
-  final _fulltextController = TextEditingController();
+  final _releaseYearController = TextEditingController();
   final _descriptionController = TextEditingController();
 
   @override
@@ -37,9 +61,9 @@ class NewFilmFormWidgetState extends State<NewFilmFormWidget> {
               },
             ),
             TextFormField(
-              controller: _fulltextController,
+              controller: _releaseYearController,
               decoration: const InputDecoration(
-                labelText: 'Fulltext',
+                labelText: 'Release Year',
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -60,15 +84,49 @@ class NewFilmFormWidgetState extends State<NewFilmFormWidget> {
                 return null;
               },
             ),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
+            Mutation(
+              options: MutationOptions(
+                document: gql(createFilmMutation),
+                onCompleted: (dynamic resultData) {
+                  Film createdFilm =
+                      Film.fromJson(resultData['insert_film_one']);
+                  print(createdFilm.toJson());
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
+                    SnackBar(
+                      content: Text(
+                        'Film ${createdFilm.title} created successfully',
+                      ),
+                    ),
                   );
-                }
+                  Navigator.pop(context, createdFilm);
+                },
+                onError: (error) {
+                  print(error);
+                },
+              ),
+              builder: (runMutation, result) {
+                return ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      Film film = Film(
+                        title: _titleController.text,
+                        releaseYear: _releaseYearController.text.toYear(),
+                        description: _descriptionController.text,
+                        languageId: 1,
+                        rentalDuration: 7,
+                        rentalRate: 20,
+                        replacementCost: 10,
+                        lastUpdate: DateTime.now(),
+                        fulltext: 'Full text',
+                      );
+                      runMutation({
+                        'film': film.toJson(),
+                      });
+                    }
+                  },
+                  child: const Text('Submit'),
+                );
               },
-              child: const Text('Submit'),
             ),
           ],
         ),
