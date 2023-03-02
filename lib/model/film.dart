@@ -1,3 +1,5 @@
+import 'package:graphql_flutter_client/model/mpaa_rating.dart';
+
 class Film {
   final int? filmId;
   final String title;
@@ -9,7 +11,7 @@ class Film {
   final double rentalRate;
   final int? length;
   final double replacementCost;
-  final String? rating;
+  final MPAARating? rating;
   final DateTime lastUpdate;
   final String? specialFeatures;
   final String fulltext;
@@ -42,7 +44,7 @@ class Film {
       'rental_rate': rentalRate,
       'length': length,
       'replacement_cost': replacementCost,
-      'rating': rating,
+      'rating': mPAARatingKeyValues[rating],
       'last_update': lastUpdate.toIso8601String(),
       'special_features': specialFeatures,
       'fulltext': fulltext,
@@ -61,7 +63,9 @@ class Film {
       rentalRate: json['rental_rate'] as double,
       length: json['length'],
       replacementCost: json['replacement_cost'] as double,
-      rating: json['rating'],
+      rating: mPAARatingKeyValues.keys.firstWhere(
+          (k) => mPAARatingKeyValues[k] == json['rating'],
+          orElse: () => MPAARating.g),
       lastUpdate: DateTime.parse(json['last_update'] as String),
       specialFeatures: json['special_features'],
       fulltext: json['fulltext'] as String,

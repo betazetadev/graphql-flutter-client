@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:graphql_flutter_client/util/string_extensions.dart';
 import '../model/film.dart';
+import '../model/mpaa_rating.dart';
 
 String createFilmMutation = r"""
   mutation NewFilmMutation($film: film_insert_input = {}) {
@@ -36,6 +37,19 @@ class NewFilmFormWidgetState extends State<NewFilmFormWidget> {
   final _titleController = TextEditingController();
   final _releaseYearController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _lengthController = TextEditingController();
+  final _ratingController = TextEditingController();
+  late MPAARating? mpaaRating = MPAARating.g;
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _releaseYearController.dispose();
+    _descriptionController.dispose();
+    _lengthController.dispose();
+    _ratingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +98,29 @@ class NewFilmFormWidgetState extends State<NewFilmFormWidget> {
                 return null;
               },
             ),
+            TextFormField(
+              controller: _lengthController,
+              decoration: const InputDecoration(
+                labelText: 'Length',
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some text';
+                }
+                return null;
+              },
+            ),
+            DropdownButton<MPAARating>(
+                value: mpaaRating,
+                onChanged: (MPAARating? newValue) {
+                  setState(() {
+                    mpaaRating = newValue;
+                  });
+                },
+                items: MPAARating.values.map((MPAARating classType) {
+                  return DropdownMenuItem<MPAARating>(
+                      value: classType, child: Text(classType.name.toUpperCase()));
+                }).toList()),
             Mutation(
               options: MutationOptions(
                 document: gql(createFilmMutation),
@@ -101,6 +138,13 @@ class NewFilmFormWidgetState extends State<NewFilmFormWidget> {
                   Navigator.pop(context, createdFilm);
                 },
                 onError: (error) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Error creating film: ${error.toString()}',
+                      ),
+                    ),
+                  );
                   print(error);
                 },
               ),
@@ -113,6 +157,8 @@ class NewFilmFormWidgetState extends State<NewFilmFormWidget> {
                         releaseYear: _releaseYearController.text.toYear(),
                         description: _descriptionController.text,
                         languageId: 1,
+                        length: _lengthController.text.toInt(),
+                        rating: mpaaRating,
                         rentalDuration: 7,
                         rentalRate: 20,
                         replacementCost: 10,
