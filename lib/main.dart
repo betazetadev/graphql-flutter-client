@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:graphql_flutter_client/view/new_film_form_widget.dart';
+import 'package:graphql_flutter_client/widget/year_picker.dart';
+
+import 'model/film.dart';
 
 String fetchAllFilms = r"""
   query FetchAllFilms {
@@ -8,6 +11,26 @@ String fetchAllFilms = r"""
       title
       fulltext
       description
+    }
+  }
+""";
+
+String fetchFilmsFromYear = r"""
+  query FilmsFromYearQuery($year: Int = 2023) {
+    film(where: {release_year: {_eq: $year}}) {
+      description
+      film_id
+      fulltext
+      language_id
+      last_update
+      length
+      original_language_id
+      rating
+      release_year
+      rental_duration
+      rental_rate
+      replacement_cost
+      title
     }
   }
 """;
@@ -60,8 +83,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int selectedYear = 2023;
+  late final GraphQLClient graphQLClient;
+  List<DropdownMenuItem<int>> years = [];
+
+  void _onYearChanged(int year) {
+    setState(() {
+      selectedYear = year;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Fill the list of years as int with the last 10 years
+    years = List.generate(5, (index) => 2023 - index)
+        .map((e) => DropdownMenuItem(value: e, child: Text(e.toString())))
+        .toList();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -77,36 +114,54 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-          child: Query(
-        options: QueryOptions(
-          document: gql(fetchAllFilms),
-        ),
-        builder: (QueryResult result,
-            {VoidCallback? refetch, FetchMore? fetchMore}) {
-          if (result.hasException) {
-            return Text(result.exception.toString());
-          }
-
-          if (result.isLoading) {
-            return const Text('Loading');
-          }
-
-          // it can be either Map or List
-          List films = result.data!['film'];
-
-          return ListView.builder(
-            itemCount: films.length,
-            itemBuilder: (context, index) {
-              final film = films[index];
-              return ListTile(
-                title: Text(film['title']),
-                subtitle: Text(film['description']),
-              );
+      body: Column(
+        children: [
+          CustomYearPicker(
+            startYear: 2006,
+            endYear: DateTime.now().year,
+            onChanged: (int value) => _onYearChanged(value),
+          ),
+          Expanded(child: GraphQLConsumer(
+            builder: (GraphQLClient client) {
+              // do something with the client
+              return FutureBuilder(
+                  future: client.query(QueryOptions(
+                    fetchPolicy: FetchPolicy.networkOnly,
+                    document: gql(fetchFilmsFromYear),
+                    variables: <String, dynamic>{
+                      'year': selectedYear,
+                    },
+                  )),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text(snapshot.error.toString());
+                    }
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      final films = (snapshot.data as QueryResult)
+                          .data!['film']
+                          .map<Film>((film) => Film.fromJson(film))
+                          .toList();
+                      return _buildFilmsList(context, films);
+                    }
+                    return const CircularProgressIndicator();
+                  });
             },
-          );
-        },
-      )), // This trailing comma makes auto-formatting nicer for build methods.
+          )),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilmsList(BuildContext context, List<Film> films) {
+    return ListView.builder(
+      itemCount: films.length,
+      itemBuilder: (context, index) {
+        final film = films[index];
+        return ListTile(
+          title: Text(film.title),
+          subtitle: Text(film.description ?? ''),
+        );
+      },
     );
   }
 }

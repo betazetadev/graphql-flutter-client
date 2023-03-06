@@ -53,7 +53,7 @@ class Film {
 
   factory Film.fromJson(Map<String, dynamic> json) {
     return Film(
-      filmId: json['film_id'] as int,
+      filmId: json['film_id'],
       title: json['title'] as String,
       description: json['description'] as String,
       releaseYear: json['release_year'] as int,
