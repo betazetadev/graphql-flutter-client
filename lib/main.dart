@@ -159,12 +159,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return ListView.builder(
       itemCount: films.length,
       itemBuilder: (context, index) {
-        // Extract the hours and minutes from the film length
-        final int hours = (films[index].length ?? 0) ~/ 60;
-        final int minutes = (films[index].length ?? 0) % 60;
-        final String minutesString = minutes < 10 ? '0$minutes' : '$minutes';
-        final String hoursString = hours < 10 ? '0$hours' : '$hours';
-        final String length = '$hoursString:$minutesString';
         final film = films[index];
         return ListTile(
           onTap: () {
@@ -178,7 +172,11 @@ class _MyHomePageState extends State<MyHomePage> {
           },
           title: Text(film.title),
           dense: true,
-          leading: Text(length),
+          leading: Text(
+            film.rentalRate.toString(),
+            style: const TextStyle(
+                color: Colors.amber, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
           trailing: Image.asset(
               'icons/flags/png/2.5x/${film.language?.code ?? 'en'}.png',
               package: 'country_icons',

@@ -12,6 +12,12 @@ class FilmDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Refactor this to a separate class
+    final int hours = (film.length ?? 0) ~/ 60;
+    final int minutes = (film.length ?? 0) % 60;
+    final String minutesString = minutes < 10 ? '0$minutes' : '$minutes';
+    final String hoursString = hours < 10 ? '0$hours' : '$hours';
+    final String length = '$hoursString:$minutesString';
     return Scaffold(
       appBar: AppBar(
         title: const Text('Movie Details'),
@@ -37,7 +43,7 @@ class FilmDetailsPage extends StatelessWidget {
                       color: Colors.grey,
                     ),
                     Text(
-                      ' ${film.length}',
+                      ' $length',
                       style: const TextStyle(fontSize: 16.0),
                     ),
                   ]),
@@ -59,12 +65,23 @@ class FilmDetailsPage extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10, top: 10),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  film.specialFeatures?.join(', \n').replaceAll(",", "") ?? '',
-                  style: const TextStyle(fontSize: 12.0, color: Colors.indigo),
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    film.rentalRate.toString(),
+                    style: const TextStyle(
+                        fontSize: 32.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.amber),
+                  ),
+                  Text(
+                    film.specialFeatures?.join(', \n').replaceAll(",", "") ??
+                        '',
+                    style:
+                        const TextStyle(fontSize: 12.0, color: Colors.indigo),
+                  ),
+                ],
               ),
             ),
           ],
