@@ -15,7 +15,7 @@ class Film {
   final double replacementCost;
   final MPAARating? rating;
   final DateTime lastUpdate;
-  final String? specialFeatures;
+  final List<String?>? specialFeatures;
   final String fulltext;
 
   Film({
@@ -55,6 +55,10 @@ class Film {
   }
 
   factory Film.fromJson(Map<String, dynamic> json) {
+    List<String> specialFeatures = [];
+    if (json['special_features'] != null) {
+      specialFeatures = (json['special_features']).map<String>((e) => e.toString()).toList();
+    }
     return Film(
       filmId: json['film_id'],
       title: json['title'] as String,
@@ -73,7 +77,7 @@ class Film {
           (k) => mPAARatingKeyValues[k] == json['rating'],
           orElse: () => MPAARating.g),
       lastUpdate: DateTime.parse(json['last_update'] as String),
-      specialFeatures: json['special_features'],
+      specialFeatures: specialFeatures,
       fulltext: json['fulltext'] as String,
     );
   }

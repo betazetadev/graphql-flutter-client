@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:graphql_flutter_client/view/new_film_form_widget.dart';
+import 'package:graphql_flutter_client/view/film_details_page.dart';
+import 'package:graphql_flutter_client/view/new_film_form_page.dart';
 import 'package:graphql_flutter_client/widget/year_picker.dart';
 
 import 'model/film.dart';
@@ -31,6 +32,7 @@ String fetchFilmsFromYear = r"""
       rental_rate
       replacement_cost
       title
+      special_features
       language {
         language_id
         last_update
@@ -105,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const NewFilmFormWidget()),
+            MaterialPageRoute(builder: (context) => const NewFilmFormPage()),
           );
         },
         child: const Icon(Icons.add),
@@ -165,6 +167,15 @@ class _MyHomePageState extends State<MyHomePage> {
         final String length = '$hoursString:$minutesString';
         final film = films[index];
         return ListTile(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FilmDetailsPage(
+                        film: film,
+                      )),
+            );
+          },
           title: Text(film.title),
           dense: true,
           leading: Text(length),

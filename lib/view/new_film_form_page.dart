@@ -25,14 +25,14 @@ String createFilmMutation = r"""
   }
 """;
 
-class NewFilmFormWidget extends StatefulWidget {
-  const NewFilmFormWidget({super.key});
+class NewFilmFormPage extends StatefulWidget {
+  const NewFilmFormPage({super.key});
 
   @override
-  NewFilmFormWidgetState createState() => NewFilmFormWidgetState();
+  NewFilmFormPageState createState() => NewFilmFormPageState();
 }
 
-class NewFilmFormWidgetState extends State<NewFilmFormWidget> {
+class NewFilmFormPageState extends State<NewFilmFormPage> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _releaseYearController = TextEditingController();
