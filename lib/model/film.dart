@@ -1,4 +1,5 @@
 import 'package:graphql_flutter_client/model/mpaa_rating.dart';
+import 'language.dart';
 
 class Film {
   final int? filmId;
@@ -6,6 +7,7 @@ class Film {
   final String? description;
   final int? releaseYear;
   final int languageId;
+  final Language? language;
   final int? originalLanguageId;
   final int rentalDuration;
   final double rentalRate;
@@ -22,6 +24,7 @@ class Film {
     this.description,
     this.releaseYear,
     required this.languageId,
+    this.language,
     this.originalLanguageId,
     required this.rentalDuration,
     required this.rentalRate,
@@ -58,6 +61,9 @@ class Film {
       description: json['description'] as String,
       releaseYear: json['release_year'] as int,
       languageId: json['language_id'] as int,
+      language: json['language'] != null
+          ? Language.fromJson(json['language'] as Map<String, dynamic>)
+          : null,
       originalLanguageId: json['original_language_id'],
       rentalDuration: json['rental_duration'] as int,
       rentalRate: json['rental_rate'] as double,

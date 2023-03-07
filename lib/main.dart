@@ -31,6 +31,12 @@ String fetchFilmsFromYear = r"""
       rental_rate
       replacement_cost
       title
+      language {
+        language_id
+        last_update
+        name
+        code
+      }      
     }
   }
 """;
@@ -85,7 +91,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int selectedYear = 2023;
   late final GraphQLClient graphQLClient;
-  List<DropdownMenuItem<int>> years = [];
 
   void _onYearChanged(int year) {
     setState(() {
@@ -95,10 +100,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Fill the list of years as int with the last 10 years
-    years = List.generate(5, (index) => 2023 - index)
-        .map((e) => DropdownMenuItem(value: e, child: Text(e.toString())))
-        .toList();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -156,9 +157,21 @@ class _MyHomePageState extends State<MyHomePage> {
     return ListView.builder(
       itemCount: films.length,
       itemBuilder: (context, index) {
+        // Extract the hours and minutes from the film length
+        final int hours = (films[index].length ?? 0) ~/ 60;
+        final int minutes = (films[index].length ?? 0) % 60;
+        final String minutesString = minutes < 10 ? '0$minutes' : '$minutes';
+        final String hoursString = hours < 10 ? '0$hours' : '$hours';
+        final String length = '$hoursString:$minutesString';
         final film = films[index];
         return ListTile(
           title: Text(film.title),
+          dense: true,
+          leading: Text(length),
+          trailing: Image.asset(
+              'icons/flags/png/2.5x/${film.language?.code ?? 'en'}.png',
+              package: 'country_icons',
+              width: 64),
           subtitle: Text(film.description ?? ''),
         );
       },

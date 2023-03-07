@@ -46,6 +46,6 @@ class CustomYearPickerState extends State<CustomYearPicker> {
         child: Text(year.toString()),
       ));
     }
-    return items;
+    return items.reversed.toList();
   }
 }
