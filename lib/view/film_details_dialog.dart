@@ -17,8 +17,35 @@ class FilmDetailsDialog extends StatelessWidget {
     final String hoursString = hours < 10 ? '0$hours' : '$hours';
     final String length = '$hoursString:$minutesString';
 
-    return Dialog(
-      child: Column(
+    return AlertDialog(
+      title: const Text('Movie Details'),
+      actionsPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+      actions: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () {
+                // TODO: Implement modify film logic
+                Navigator.of(context).pop();
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () {
+                // TODO: Implement delete film logic
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      ],
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -26,7 +53,8 @@ class FilmDetailsDialog extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               film.title,
-              style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              style:
+                  const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
@@ -66,7 +94,8 @@ class FilmDetailsDialog extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
+            padding:
+                const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
