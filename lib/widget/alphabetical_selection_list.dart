@@ -1,7 +1,7 @@
 import 'package:alphabet_scroll_view/alphabet_scroll_view.dart';
 import 'package:flutter/material.dart';
 import '../model/film.dart';
-import '../view/film_details_page.dart';
+import '../view/film_details_dialog.dart';
 
 class AlphabeticalSelectionList extends StatefulWidget {
   final List<Film> items;
@@ -14,9 +14,6 @@ class AlphabeticalSelectionList extends StatefulWidget {
 }
 
 class AlphabeticalSelectionListState extends State<AlphabeticalSelectionList> {
-  final ScrollController _scrollController = ScrollController();
-  int selectedIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return AlphabetScrollView(
@@ -32,13 +29,10 @@ class AlphabeticalSelectionListState extends State<AlphabeticalSelectionList> {
                 final Film selectedFilm = widget.items
                     .where((element) => element.title == title)
                     .first;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => FilmDetailsPage(
-                            film: selectedFilm,
-                          )),
-                );
+                showDialog(
+                    context: context,
+                    builder: (context) =>
+                        FilmDetailsDialog(film: selectedFilm));
               },
               title: Text(rowFilm.title),
               subtitle: Text(rowFilm.description ?? ''),
@@ -56,11 +50,11 @@ class AlphabeticalSelectionListState extends State<AlphabeticalSelectionList> {
             ),
           );
         },
-        selectedTextStyle: TextStyle(
+        selectedTextStyle: const TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
         ),
         unselectedTextStyle:
-            TextStyle(color: Colors.grey, fontWeight: FontWeight.normal));
+            const TextStyle(color: Colors.grey, fontWeight: FontWeight.normal));
   }
 }
