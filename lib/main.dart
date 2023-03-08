@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:graphql_flutter_client/view/film_details_page.dart';
 import 'package:graphql_flutter_client/view/new_film_form_page.dart';
 import 'package:graphql_flutter_client/widget/alphabetical_selection_list.dart';
-import 'package:graphql_flutter_client/widget/year_picker.dart';
+import 'package:graphql_flutter_client/widget/year_horizontal_selection_list.dart';
 
 import 'model/film.dart';
 
@@ -116,20 +115,15 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: Column(
         children: [
-          CustomYearPicker(
-            startYear: 2006,
-            endYear: DateTime.now().year,
-            onChanged: (int value) => _onYearChanged(value),
-          ),
+          YearHorizontalSelectionList((year) {
+            _onYearChanged(year);
+          }),
           Expanded(child: GraphQLConsumer(
             builder: (GraphQLClient client) {
-              // do something with the client
               return FutureBuilder(
                   future: client.query(QueryOptions(
                     fetchPolicy: FetchPolicy.networkOnly,

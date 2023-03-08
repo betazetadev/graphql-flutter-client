@@ -18,7 +18,6 @@ class FilmDetailsDialog extends StatelessWidget {
     final String length = '$hoursString:$minutesString';
 
     return AlertDialog(
-      title: const Text('Movie Details'),
       actionsPadding: const EdgeInsets.symmetric(horizontal: 10.0),
       actions: <Widget>[
         Row(
