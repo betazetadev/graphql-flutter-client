@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   graphql_flutter: ^5.1.2
   country_icons: ^2.0.2
+  alphabet_scroll_view: ^0.3.2
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:graphql_flutter_client/view/film_details_page.dart';
 import 'package:graphql_flutter_client/view/new_film_form_page.dart';
+import 'package:graphql_flutter_client/widget/alphabetical_selection_list.dart';
 import 'package:graphql_flutter_client/widget/year_picker.dart';
 
 import 'model/film.dart';
@@ -103,6 +104,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -156,34 +159,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildFilmsList(BuildContext context, List<Film> films) {
-    return ListView.builder(
-      itemCount: films.length,
-      itemBuilder: (context, index) {
-        final film = films[index];
-        return ListTile(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => FilmDetailsPage(
-                        film: film,
-                      )),
-            );
-          },
-          title: Text(film.title),
-          dense: true,
-          leading: Text(
-            film.rentalRate.toString(),
-            style: const TextStyle(
-                color: Colors.amber, fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          trailing: Image.asset(
-              'icons/flags/png/2.5x/${film.language?.code ?? 'en'}.png',
-              package: 'country_icons',
-              width: 64),
-          subtitle: Text(film.description ?? ''),
-        );
-      },
-    );
+    return AlphabeticalSelectionList(items: films);
   }
 }
