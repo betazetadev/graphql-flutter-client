@@ -6,14 +6,14 @@ import '../view/film_details_page.dart';
 class AlphabeticalSelectionList extends StatefulWidget {
   final List<Film> items;
 
-  AlphabeticalSelectionList({required this.items});
+  const AlphabeticalSelectionList({super.key, required this.items});
 
   @override
-  _AlphabeticalSelectionListState createState() =>
-      _AlphabeticalSelectionListState();
+  AlphabeticalSelectionListState createState() =>
+      AlphabeticalSelectionListState();
 }
 
-class _AlphabeticalSelectionListState extends State<AlphabeticalSelectionList> {
+class AlphabeticalSelectionListState extends State<AlphabeticalSelectionList> {
   final ScrollController _scrollController = ScrollController();
   int selectedIndex = 0;
 
@@ -21,15 +21,17 @@ class _AlphabeticalSelectionListState extends State<AlphabeticalSelectionList> {
   Widget build(BuildContext context) {
     return AlphabetScrollView(
         list: widget.items.map((e) => AlphaModel(e.title)).toList(),
-        itemExtent: 50,
+        itemExtent: 100,
         itemBuilder: (_, index, title) {
+          final Film rowFilm =
+              widget.items.where((element) => element.title == title).first;
           return Padding(
             padding: const EdgeInsets.only(right: 20),
             child: ListTile(
               onTap: () {
-                print(index);
-                final Film selectedFilm = widget.items.where((element) => element.title == title).first;
-                print(selectedFilm.title);
+                final Film selectedFilm = widget.items
+                    .where((element) => element.title == title)
+                    .first;
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -38,8 +40,19 @@ class _AlphabeticalSelectionListState extends State<AlphabeticalSelectionList> {
                           )),
                 );
               },
-              title: Text(title),
-              subtitle: Text('Secondary text'),
+              title: Text(rowFilm.title),
+              subtitle: Text(rowFilm.description ?? ''),
+              leading: Text(
+                rowFilm.rentalRate.toString(),
+                style: const TextStyle(
+                    color: Colors.amber,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
+              ),
+              trailing: Image.asset(
+                  'icons/flags/png/2.5x/${rowFilm.language?.code ?? 'en'}.png',
+                  package: 'country_icons',
+                  width: 64),
             ),
           );
         },
