@@ -20,7 +20,7 @@ class YearHorizontalSelectionListState
     super.initState();
     int currentYear = DateTime.now().year;
     selectedYear = currentYear;
-    for (int i = currentYear; i >= 2006; i--) {
+    for (int i = currentYear; i >= 2003; i--) {
       years.add(i);
     }
   }

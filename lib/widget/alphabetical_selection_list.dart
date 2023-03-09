@@ -37,11 +37,9 @@ class AlphabeticalSelectionListState extends State<AlphabeticalSelectionList> {
                         FilmDetailsDialog(film: selectedFilm));
               },
               title: Text(rowFilm.title),
-              subtitle: Flexible(
-                  child: Text(
+              subtitle: Text(
                 rowFilm.description ?? '',
-                overflow: TextOverflow.ellipsis,
-              )),
+              ),
               leading: Text(
                 rowFilm.rentalRate.toString(),
                 style: const TextStyle(

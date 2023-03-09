@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:graphql_flutter_client/view/edit_film_form_page.dart';
 import '../model/film.dart';
 import '../model/mpaa_rating.dart';
 
@@ -30,8 +30,15 @@ class FilmDetailsDialog extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
-                // TODO: Implement modify film logic
                 Navigator.of(context).pop();
+/*                showDialog(
+                    context: context,
+                    builder: (context) => EditFilmFormDialog(film: film));*/
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => EditFilmFormPage(film: film),
+                  ),
+                );
               },
             ),
             IconButton(
