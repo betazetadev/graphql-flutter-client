@@ -10,7 +10,7 @@ class FilmDetailsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Refactor this to a separate class
+    // TODO Refactor this to a separate class
     final int hours = (film.length ?? 0) ~/ 60;
     final int minutes = (film.length ?? 0) % 60;
     final String minutesString = minutes < 10 ? '0$minutes' : '$minutes';

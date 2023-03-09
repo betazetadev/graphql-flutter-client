@@ -18,13 +18,15 @@ class AlphabeticalSelectionListState extends State<AlphabeticalSelectionList> {
   Widget build(BuildContext context) {
     return AlphabetScrollView(
         list: widget.items.map((e) => AlphaModel(e.title)).toList(),
-        itemExtent: 100,
+        itemExtent: 50,
+        isAlphabetsFiltered: true,
         itemBuilder: (_, index, title) {
           final Film rowFilm =
               widget.items.where((element) => element.title == title).first;
           return Padding(
-            padding: const EdgeInsets.only(right: 20),
+            padding: const EdgeInsets.only(right: 20, top: 20),
             child: ListTile(
+              dense: true,
               onTap: () {
                 final Film selectedFilm = widget.items
                     .where((element) => element.title == title)
@@ -35,7 +37,11 @@ class AlphabeticalSelectionListState extends State<AlphabeticalSelectionList> {
                         FilmDetailsDialog(film: selectedFilm));
               },
               title: Text(rowFilm.title),
-              subtitle: Text(rowFilm.description ?? ''),
+              subtitle: Flexible(
+                  child: Text(
+                rowFilm.description ?? '',
+                overflow: TextOverflow.ellipsis,
+              )),
               leading: Text(
                 rowFilm.rentalRate.toString(),
                 style: const TextStyle(
