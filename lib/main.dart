@@ -141,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           .data!['film']
                           .map<Film>((film) => Film.fromJson(film))
                           .toList();
-                      return _buildFilmsList(context, films);
+                      return AlphabeticalSelectionList(items: films);
                     }
                     return const CircularProgressIndicator();
                   });
@@ -150,9 +150,5 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
-  }
-
-  Widget _buildFilmsList(BuildContext context, List<Film> films) {
-    return AlphabeticalSelectionList(items: films);
   }
 }

@@ -33,8 +33,13 @@ class AlphabeticalSelectionListState extends State<AlphabeticalSelectionList> {
                     .first;
                 showDialog(
                     context: context,
-                    builder: (context) =>
-                        FilmDetailsDialog(film: selectedFilm));
+                    builder: (context) => FilmDetailsDialog(
+                        film: selectedFilm,
+                        onFilmDeleted: (Film deletedFilm) {
+                          setState(() {
+                            widget.items.remove(deletedFilm);
+                          });
+                        }));
               },
               title: Text(rowFilm.title),
               subtitle: Text(

@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:graphql_flutter_client/view/edit_film_form_page.dart';
 import '../model/film.dart';
 import '../model/mpaa_rating.dart';
 
-class FilmDetailsDialog extends StatelessWidget {
-  final Film film;
+String deleteFilmMutation = r"""
+  mutation DeleteFilmByPK($film_id: Int = -1) {
+    delete_film_by_pk(film_id: $film_id) {
+      length
+      film_id
+      description
+    }
+  }
+""";
 
-  const FilmDetailsDialog({Key? key, required this.film}) : super(key: key);
+class FilmDetailsDialog extends StatelessWidget {
+  const FilmDetailsDialog({Key? key, required this.film, required this.onFilmDeleted}) : super(key: key);
+
+  final Film film;
+  final Function(Film deletedFilm) onFilmDeleted;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +43,6 @@ class FilmDetailsDialog extends StatelessWidget {
               icon: const Icon(Icons.edit),
               onPressed: () {
                 Navigator.of(context).pop();
-/*                showDialog(
-                    context: context,
-                    builder: (context) => EditFilmFormDialog(film: film));*/
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => EditFilmFormPage(film: film),
@@ -41,11 +50,43 @@ class FilmDetailsDialog extends StatelessWidget {
                 );
               },
             ),
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                // TODO: Implement delete film logic
-                Navigator.of(context).pop();
+            Mutation(
+              options: MutationOptions(
+                document: gql(deleteFilmMutation),
+                onError: (OperationException? error) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Error deleting film ${film.title}: ${error?.toString() ?? 'Unknown error'}',
+                      ),
+                    ),
+                  );
+                },
+                onCompleted: (dynamic resultData) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Film ${film.title} deleted successfully',
+                      ),
+                    ),
+                  );
+                  onFilmDeleted(film);
+                  Navigator.pop(context);
+                },
+              ),
+              builder: (MultiSourceResult<Object?> Function(
+                          Map<String, dynamic>,
+                          {Object? optimisticResult})
+                      runMutation,
+                  QueryResult<Object?>? result) {
+                return IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    runMutation({
+                      'film_id': film.filmId,
+                    });
+                  },
+                );
               },
             ),
           ],
