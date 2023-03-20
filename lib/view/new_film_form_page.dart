@@ -26,7 +26,9 @@ String createFilmMutation = r"""
 """;
 
 class NewFilmFormPage extends StatefulWidget {
-  const NewFilmFormPage({super.key});
+  const NewFilmFormPage({super.key, required this.onFilmCreated});
+
+  final Function(Film) onFilmCreated;
 
   @override
   NewFilmFormPageState createState() => NewFilmFormPageState();
@@ -120,7 +122,8 @@ class NewFilmFormPageState extends State<NewFilmFormPage> {
                 },
                 items: MPAARating.values.map((MPAARating classType) {
                   return DropdownMenuItem<MPAARating>(
-                      value: classType, child: Text(classType.name.toUpperCase()));
+                      value: classType,
+                      child: Text(classType.name.toUpperCase()));
                 }).toList()),
             Mutation(
               options: MutationOptions(
@@ -137,6 +140,7 @@ class NewFilmFormPageState extends State<NewFilmFormPage> {
                     ),
                   );
                   Navigator.pop(context, createdFilm);
+                  widget.onFilmCreated(createdFilm);
                 },
                 onError: (error) {
                   ScaffoldMessenger.of(context).showSnackBar(

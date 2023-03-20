@@ -3,18 +3,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:graphql_flutter_client/view/new_film_form_page.dart';
 import 'package:graphql_flutter_client/widget/alphabetical_selection_list.dart';
 import 'package:graphql_flutter_client/widget/year_horizontal_selection_list.dart';
-
 import 'model/film.dart';
-
-String fetchAllFilms = r"""
-  query FetchAllFilms {
-    film {
-      title
-      fulltext
-      description
-    }
-  }
-""";
 
 String fetchFilmsFromYear = r"""
   query FilmsFromYearQuery($year: Int = 2023) {
@@ -102,53 +91,67 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const NewFilmFormPage()),
-          );
+    return GraphQLConsumer(builder: (GraphQLClient client) {
+      return FutureBuilder(
+        future: client.query(QueryOptions(
+          fetchPolicy: FetchPolicy.networkOnly,
+          document: gql(fetchFilmsFromYear),
+          variables: <String, dynamic>{
+            'year': selectedYear,
+          },
+        )),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              return const Center(
+                child: Text('No connection'),
+              );
+            case ConnectionState.waiting:
+              return const CircularProgressIndicator();
+            case ConnectionState.active:
+              return const Center(
+                child: Text('Active'),
+              );
+            case ConnectionState.done:
+              final List<Film> films = (snapshot.data?.data?['film'] as List)
+                  .map((film) => Film.fromJson(film))
+                  .toList();
+              return Scaffold(
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.miniCenterFloat,
+                floatingActionButton: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NewFilmFormPage(
+                                onFilmCreated: (Film createdFilm) {
+                                  setState(() {
+                                    films.add(createdFilm);
+                                  });
+                                },
+                              )),
+                    );
+                  },
+                  child: const Icon(Icons.add),
+                ),
+                appBar: AppBar(
+                  title: Text(widget.title),
+                ),
+                body: Column(
+                  children: [
+                    YearHorizontalSelectionList((year) {
+                      _onYearChanged(year);
+                    }),
+                    Expanded(
+                      child: AlphabeticalSelectionList(items: films),
+                    )
+                  ],
+                ),
+              );
+          }
         },
-        child: const Icon(Icons.add),
-      ),
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Column(
-        children: [
-          YearHorizontalSelectionList((year) {
-            _onYearChanged(year);
-          }),
-          Expanded(child: GraphQLConsumer(
-            builder: (GraphQLClient client) {
-              return FutureBuilder(
-                  future: client.query(QueryOptions(
-                    fetchPolicy: FetchPolicy.networkOnly,
-                    document: gql(fetchFilmsFromYear),
-                    variables: <String, dynamic>{
-                      'year': selectedYear,
-                    },
-                  )),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Text(snapshot.error.toString());
-                    }
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      final films = (snapshot.data as QueryResult)
-                          .data!['film']
-                          .map<Film>((film) => Film.fromJson(film))
-                          .toList();
-                      return AlphabeticalSelectionList(items: films);
-                    }
-                    return const CircularProgressIndicator();
-                  });
-            },
-          )),
-        ],
-      ),
-    );
+      );
+    });
   }
 }
