@@ -4,9 +4,9 @@ import '../model/film.dart';
 import '../view/film_details_dialog.dart';
 
 class AlphabeticalSelectionList extends StatefulWidget {
-  final List<Film> items;
-
   const AlphabeticalSelectionList({super.key, required this.items});
+
+  final List<Film> items;
 
   @override
   AlphabeticalSelectionListState createState() =>
@@ -34,12 +34,21 @@ class AlphabeticalSelectionListState extends State<AlphabeticalSelectionList> {
                 showDialog(
                     context: context,
                     builder: (context) => FilmDetailsDialog(
-                        film: selectedFilm,
-                        onFilmDeleted: (Film deletedFilm) {
-                          setState(() {
-                            widget.items.remove(deletedFilm);
-                          });
-                        }));
+                          film: selectedFilm,
+                          onFilmDeleted: (Film deletedFilm) {
+                            setState(() {
+                              widget.items.remove(deletedFilm);
+                            });
+                          },
+                          onFilmEdited: (Film editedFilm) {
+                            setState(() {
+                              widget.items[
+                                  widget.items.indexWhere((element) =>
+                                      element.filmId == editedFilm.filmId)] =
+                                  editedFilm;
+                            });
+                          },
+                        ));
               },
               title: Text(rowFilm.title),
               subtitle: Text(

@@ -43,123 +43,125 @@ class NewFilmFormPageState extends State<NewFilmFormPage> {
         key: _formKey,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Title',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _releaseYearController,
-                decoration: const InputDecoration(
-                  labelText: 'Release Year',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _lengthController,
-                decoration: const InputDecoration(
-                  labelText: 'Length',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-              ),
-              DropdownButton<MPAARating>(
-                  value: mpaaRating,
-                  onChanged: (MPAARating? newValue) {
-                    setState(() {
-                      mpaaRating = newValue;
-                    });
-                  },
-                  items: MPAARating.values.map((MPAARating classType) {
-                    return DropdownMenuItem<MPAARating>(
-                        value: classType,
-                        child: Text(classType.name.toUpperCase()));
-                  }).toList()),
-              Mutation(
-                options: MutationOptions(
-                  document: gql(createFilmMutation),
-                  onCompleted: (dynamic resultData) {
-                    Film createdFilm =
-                        Film.fromJson(resultData['insert_film_one']);
-                    print(createdFilm.toJson());
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Film ${createdFilm.title} created successfully',
-                        ),
-                      ),
-                    );
-                    Navigator.pop(context, createdFilm);
-                    widget.onFilmCreated(createdFilm);
-                  },
-                  onError: (error) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Error creating film: ${error.toString()}',
-                        ),
-                      ),
-                    );
-                    print(error);
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(
+                    labelText: 'Title',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
                   },
                 ),
-                builder: (runMutation, result) {
-                  return ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Film film = Film(
-                          title: _titleController.text,
-                          releaseYear: _releaseYearController.text.toYear(),
-                          description: _descriptionController.text,
-                          languageId: 1,
-                          length: _lengthController.text.toInt(),
-                          rating: mpaaRating,
-                          rentalDuration: 7,
-                          rentalRate: 20,
-                          replacementCost: 10,
-                          lastUpdate: DateTime.now(),
-                          fulltext: 'Full text',
-                        );
-                        runMutation({
-                          'film': film.toJson(),
-                        });
-                      }
+                TextFormField(
+                  controller: _releaseYearController,
+                  decoration: const InputDecoration(
+                    labelText: 'Release Year',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(
+                    labelText: 'Description',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _lengthController,
+                  decoration: const InputDecoration(
+                    labelText: 'Length',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                ),
+                DropdownButton<MPAARating>(
+                    value: mpaaRating,
+                    onChanged: (MPAARating? newValue) {
+                      setState(() {
+                        mpaaRating = newValue;
+                      });
                     },
-                    child: const Text('Submit'),
-                  );
-                },
-              ),
-            ],
+                    items: MPAARating.values.map((MPAARating classType) {
+                      return DropdownMenuItem<MPAARating>(
+                          value: classType,
+                          child: Text(classType.name.toUpperCase()));
+                    }).toList()),
+                Mutation(
+                  options: MutationOptions(
+                    document: gql(createFilmMutation),
+                    onCompleted: (dynamic resultData) {
+                      Film createdFilm =
+                          Film.fromJson(resultData['insert_film_one']);
+                      print(createdFilm.toJson());
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Film ${createdFilm.title} created successfully',
+                          ),
+                        ),
+                      );
+                      Navigator.pop(context, createdFilm);
+                      widget.onFilmCreated(createdFilm);
+                    },
+                    onError: (error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Error creating film: ${error.toString()}',
+                          ),
+                        ),
+                      );
+                      print(error);
+                    },
+                  ),
+                  builder: (runMutation, result) {
+                    return ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          Film film = Film(
+                            title: _titleController.text,
+                            releaseYear: _releaseYearController.text.toYear(),
+                            description: _descriptionController.text,
+                            languageId: 1,
+                            length: _lengthController.text.toInt(),
+                            rating: mpaaRating,
+                            rentalDuration: 7,
+                            rentalRate: 20,
+                            replacementCost: 10,
+                            lastUpdate: DateTime.now(),
+                            fulltext: 'Full text',
+                          );
+                          runMutation({
+                            'film': film.toJson(),
+                          });
+                        }
+                      },
+                      child: const Text('Submit'),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

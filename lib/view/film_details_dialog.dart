@@ -7,11 +7,15 @@ import '../model/mpaa_rating.dart';
 
 class FilmDetailsDialog extends StatelessWidget {
   const FilmDetailsDialog(
-      {Key? key, required this.film, required this.onFilmDeleted})
+      {Key? key,
+      required this.film,
+      required this.onFilmDeleted,
+      required this.onFilmEdited})
       : super(key: key);
 
   final Film film;
   final Function(Film deletedFilm) onFilmDeleted;
+  final Function(Film editedFilm) onFilmEdited;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +35,11 @@ class FilmDetailsDialog extends StatelessWidget {
                 Navigator.of(context).pop();
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => EditFilmFormPage(film: film),
+                    builder: (context) => EditFilmFormPage(
+                      film: film,
+                      onFilmEdited: (Film editedFilm) =>
+                          onFilmEdited(editedFilm),
+                    ),
                   ),
                 );
               },
