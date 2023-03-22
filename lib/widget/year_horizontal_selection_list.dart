@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class YearHorizontalSelectionList extends StatefulWidget {
-  const YearHorizontalSelectionList(this.onYearSelected, {super.key});
-
-  final Function(int) onYearSelected;
+  YearHorizontalSelectionList({super.key, required this.onYearSelected, required this.latestSelectedYear});
+  final Function onYearSelected;
+  int latestSelectedYear = 2023;
 
   @override
   YearHorizontalSelectionListState createState() =>
@@ -13,14 +13,14 @@ class YearHorizontalSelectionList extends StatefulWidget {
 class YearHorizontalSelectionListState
     extends State<YearHorizontalSelectionList> {
   List<int> years = [];
-  int selectedYear = 2023;
 
   @override
   void initState() {
     super.initState();
-    int currentYear = DateTime.now().year;
-    selectedYear = currentYear;
-    for (int i = currentYear; i >= 2003; i--) {
+/*    int currentYear = DateTime.now().year;
+    print("initState: currentYear = $currentYear");
+    selectedYear = currentYear;*/
+    for (int i = DateTime.now().year; i >= 2003; i--) {
       years.add(i);
     }
   }
@@ -40,13 +40,13 @@ class YearHorizontalSelectionListState
                 years[index].toString(),
                 style: TextStyle(
                   color:
-                      selectedYear == years[index] ? Colors.black : Colors.grey,
+                      widget.latestSelectedYear == years[index] ? Colors.black : Colors.grey,
                   fontSize: 16.0,
                 ),
               ),
               onTap: () {
                 setState(() {
-                  selectedYear = years[index];
+                  widget.latestSelectedYear = years[index];
                 });
                 widget.onYearSelected(years[index]);
               },

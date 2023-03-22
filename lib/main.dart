@@ -82,6 +82,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int selectedYear = 2023;
   late final GraphQLClient graphQLClient;
+  List<Film> films = [];
 
   void _onYearChanged(int year) {
     setState(() {
@@ -91,67 +92,74 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return GraphQLConsumer(builder: (GraphQLClient client) {
-      return FutureBuilder(
-        future: client.query(QueryOptions(
-          fetchPolicy: FetchPolicy.networkOnly,
-          document: gql(fetchFilmsFromYear),
-          variables: <String, dynamic>{
-            'year': selectedYear,
-          },
-        )),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-              return const Center(
-                child: Text('No connection'),
-              );
-            case ConnectionState.waiting:
-              return const CircularProgressIndicator();
-            case ConnectionState.active:
-              return const Center(
-                child: Text('Active'),
-              );
-            case ConnectionState.done:
-              final List<Film> films = (snapshot.data?.data?['film'] as List)
-                  .map((film) => Film.fromJson(film))
-                  .toList();
-              return Scaffold(
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.miniCenterFloat,
-                floatingActionButton: FloatingActionButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NewFilmFormPage(
-                                onFilmCreated: (Film createdFilm) {
-                                  setState(() {
-                                    films.add(createdFilm);
-                                  });
-                                },
-                              )),
-                    );
-                  },
-                  child: const Icon(Icons.add),
-                ),
-                appBar: AppBar(
-                  title: Text(widget.title),
-                ),
-                body: Column(
-                  children: [
-                    YearHorizontalSelectionList((year) {
-                      _onYearChanged(year);
-                    }),
-                    Expanded(
-                      child: AlphabeticalSelectionList(items: films),
-                    )
-                  ],
-                ),
-              );
-          }
+    return Scaffold(
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => NewFilmFormPage(
+                      onFilmCreated: (Film createdFilm) {
+                        setState(() {
+                          films.add(createdFilm);
+                        });
+                      },
+                    )),
+          );
         },
-      );
-    });
+        child: const Icon(Icons.add),
+      ),
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: GraphQLConsumer(
+        builder: (GraphQLClient client) {
+          return FutureBuilder(
+            future: client.query(QueryOptions(
+              fetchPolicy: FetchPolicy.networkOnly,
+              document: gql(fetchFilmsFromYear),
+              variables: <String, dynamic>{
+                'year': selectedYear,
+              },
+            )),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return const Center(
+                    child: Text('No connection'),
+                  );
+                case ConnectionState.waiting:
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                case ConnectionState.active:
+                  return const Center(
+                    child: Text('Active'),
+                  );
+                case ConnectionState.done:
+                  final List<Film> films =
+                      (snapshot.data?.data?['film'] as List)
+                          .map((film) => Film.fromJson(film))
+                          .toList();
+                  return Column(
+                    children: [
+                      YearHorizontalSelectionList(
+                          onYearSelected: (year) {
+                            _onYearChanged(year);
+                          },
+                          latestSelectedYear: selectedYear),
+                      Expanded(
+                        child: AlphabeticalSelectionList(items: films),
+                      )
+                    ],
+                  );
+              }
+            },
+          );
+        },
+      ),
+    );
   }
 }
