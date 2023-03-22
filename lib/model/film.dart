@@ -36,6 +36,14 @@ class Film {
     required this.fulltext,
   });
 
+  String get lengthText {
+    final int hours = (length ?? 0) ~/ 60;
+    final int minutes = (length ?? 0) % 60;
+    final String minutesString = minutes < 10 ? '0$minutes' : '$minutes';
+    final String hoursString = hours < 10 ? '0$hours' : '$hours';
+    return '$hoursString:$minutesString';
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'title': title,
@@ -57,7 +65,8 @@ class Film {
   factory Film.fromJson(Map<String, dynamic> json) {
     List<String> specialFeatures = [];
     if (json['special_features'] != null) {
-      specialFeatures = (json['special_features']).map<String>((e) => e.toString()).toList();
+      specialFeatures =
+          (json['special_features']).map<String>((e) => e.toString()).toList();
     }
     return Film(
       filmId: json['film_id'],

@@ -1,34 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:graphql_flutter_client/view/edit_film_form_page.dart';
+import '../grapql/graphql_films.dart';
 import '../model/film.dart';
 import '../model/mpaa_rating.dart';
 
-String deleteFilmMutation = r"""
-  mutation DeleteFilmByPK($film_id: Int = -1) {
-    delete_film_by_pk(film_id: $film_id) {
-      length
-      film_id
-      description
-    }
-  }
-""";
-
 class FilmDetailsDialog extends StatelessWidget {
-  const FilmDetailsDialog({Key? key, required this.film, required this.onFilmDeleted}) : super(key: key);
+  const FilmDetailsDialog(
+      {Key? key, required this.film, required this.onFilmDeleted})
+      : super(key: key);
 
   final Film film;
   final Function(Film deletedFilm) onFilmDeleted;
 
   @override
   Widget build(BuildContext context) {
-    // TODO Refactor this to a separate class
-    final int hours = (film.length ?? 0) ~/ 60;
-    final int minutes = (film.length ?? 0) % 60;
-    final String minutesString = minutes < 10 ? '0$minutes' : '$minutes';
-    final String hoursString = hours < 10 ? '0$hours' : '$hours';
-    final String length = '$hoursString:$minutesString';
-
     return AlertDialog(
       actionsPadding: const EdgeInsets.symmetric(horizontal: 10.0),
       actions: <Widget>[
@@ -116,7 +102,7 @@ class FilmDetailsDialog extends StatelessWidget {
                       color: Colors.grey,
                     ),
                     Text(
-                      ' $length',
+                      ' ${film.lengthText}',
                       style: const TextStyle(fontSize: 16.0),
                     ),
                   ],

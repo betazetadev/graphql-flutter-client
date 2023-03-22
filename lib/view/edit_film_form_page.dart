@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:graphql_flutter_client/util/string_extensions.dart';
+import '../grapql/graphql_films.dart';
 import '../model/film.dart';
 import '../model/mpaa_rating.dart';
-
-String editFilmMutation = r"""
-  mutation EditFilmMutation($filmId: Int, $film: film_set_input = {}) {
-    update_film(where: {film_id: {_eq: $filmId}}, _set: $film) {
-      affected_rows
-    }
-  }
-""";
 
 class EditFilmFormPage extends StatefulWidget {
   const EditFilmFormPage({super.key, required this.film});

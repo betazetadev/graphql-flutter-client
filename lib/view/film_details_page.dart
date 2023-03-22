@@ -6,18 +6,13 @@ import '../model/mpaa_rating.dart';
 class FilmDetailsPage extends StatelessWidget {
   final Film film;
 
-  FilmDetailsPage({
+  const FilmDetailsPage({
+    super.key,
     required this.film,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Refactor this to a separate class
-    final int hours = (film.length ?? 0) ~/ 60;
-    final int minutes = (film.length ?? 0) % 60;
-    final String minutesString = minutes < 10 ? '0$minutes' : '$minutes';
-    final String hoursString = hours < 10 ? '0$hours' : '$hours';
-    final String length = '$hoursString:$minutesString';
     return Scaffold(
       appBar: AppBar(
         title: const Text('Movie Details'),
@@ -43,7 +38,7 @@ class FilmDetailsPage extends StatelessWidget {
                       color: Colors.grey,
                     ),
                     Text(
-                      ' $length',
+                      ' ${film.lengthText}',
                       style: const TextStyle(fontSize: 16.0),
                     ),
                   ]),

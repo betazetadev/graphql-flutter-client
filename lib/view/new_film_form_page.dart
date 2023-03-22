@@ -1,29 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:graphql_flutter_client/util/string_extensions.dart';
+import '../grapql/graphql_films.dart';
 import '../model/film.dart';
 import '../model/mpaa_rating.dart';
-
-String createFilmMutation = r"""
-  mutation NewFilmMutation($film: film_insert_input = {}) {
-    insert_film_one(object: $film) {
-      film_id
-      title
-      description
-      release_year
-      language_id
-      original_language_id
-      rental_duration
-      rental_rate
-      length
-      replacement_cost
-      rating
-      last_update
-      special_features
-      fulltext
-    }
-  }
-""";
 
 class NewFilmFormPage extends StatefulWidget {
   const NewFilmFormPage({super.key, required this.onFilmCreated});
