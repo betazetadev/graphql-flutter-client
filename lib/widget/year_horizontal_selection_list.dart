@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class YearHorizontalSelectionList extends StatefulWidget {
-  YearHorizontalSelectionList({super.key, required this.onYearSelected, required this.latestSelectedYear});
+  YearHorizontalSelectionList(
+      {super.key,
+      required this.onYearSelected,
+      required this.latestSelectedYear});
+
   final Function onYearSelected;
   int latestSelectedYear = 2023;
 
@@ -17,9 +21,6 @@ class YearHorizontalSelectionListState
   @override
   void initState() {
     super.initState();
-/*    int currentYear = DateTime.now().year;
-    print("initState: currentYear = $currentYear");
-    selectedYear = currentYear;*/
     for (int i = DateTime.now().year; i >= 2003; i--) {
       years.add(i);
     }
@@ -27,7 +28,7 @@ class YearHorizontalSelectionListState
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 50.0,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -39,8 +40,9 @@ class YearHorizontalSelectionListState
               child: Text(
                 years[index].toString(),
                 style: TextStyle(
-                  color:
-                      widget.latestSelectedYear == years[index] ? Colors.black : Colors.grey,
+                  color: widget.latestSelectedYear == years[index]
+                      ? Colors.black
+                      : Colors.grey,
                   fontSize: 16.0,
                 ),
               ),
