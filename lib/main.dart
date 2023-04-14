@@ -3,34 +3,8 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:graphql_flutter_client/view/new_film_form_page.dart';
 import 'package:graphql_flutter_client/widget/alphabetical_selection_list.dart';
 import 'package:graphql_flutter_client/widget/year_horizontal_selection_list.dart';
+import 'graphql/graphql_films.dart';
 import 'model/film.dart';
-
-String fetchFilmsFromYear = r"""
-  query FilmsFromYearQuery($year: Int = 2023) {
-    film(where: {release_year: {_eq: $year}}) {
-      description
-      film_id
-      fulltext
-      language_id
-      last_update
-      length
-      original_language_id
-      rating
-      release_year
-      rental_duration
-      rental_rate
-      replacement_cost
-      title
-      special_features
-      language {
-        language_id
-        last_update
-        name
-        code
-      }      
-    }
-  }
-""";
 
 void main() async {
   await initHiveForFlutter();
@@ -139,10 +113,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text('Active'),
                   );
                 case ConnectionState.done:
-                  final List<Film> films =
-                      (snapshot.data?.data?['film'] as List)
-                          .map((film) => Film.fromJson(film))
-                          .toList();
+                  final List<dynamic>? filmsData = snapshot.data?.data?['film'] as List<dynamic>?;
+                  final List<Film> films = filmsData != null
+                      ? filmsData.map((film) => Film.fromJson(film)).toList()
+                      : [];
+
                   return Column(
                     children: [
                       YearHorizontalSelectionList(
