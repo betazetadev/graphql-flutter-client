@@ -50,7 +50,7 @@ flutter pub get
 docker-compose up -d
 ```
 
-5. Import and create the database information using [this](https://github.com/morenoh149/postgresDBSamples/tree/master/pagila-0.10.1) files connecting to the virtualized database
+5. Import and create the database information using [this](https://github.com/morenoh149/postgresDBSamples/tree/master/pagila-0.10.1) files connecting to the virtualized database.
 
 6. Add a `code` column to the `language` table with the default value set to `gb` (they are used to show a flag next to the film information): 
 
@@ -63,7 +63,7 @@ docker-compose up -d
 | German | ge |
 | Italian | it |
 
-7. Reload Hasura metadata to get the new column from the settings menu placed in the right upper corner of the admin panel listening in the local port 8080.
+7. Reload Hasura metadata to get the new column from the settings menu placed in the right upper corner of the admin panel listening in the local port 8080. You don't need to do this if you add the `code` column from the Hasura admin panel.
 
 ## License
 
