@@ -7,8 +7,6 @@ This project was created for a tutorial on how to build a Flutter application th
 - [Overview](#overview)
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Overview
