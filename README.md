@@ -1,6 +1,6 @@
 # Flutter GraphQL App with Hasura Tutorial
 
-This project is a step-by-step tutorial on how to build a Flutter application that consumes a GraphQL API using Hasura. The application demonstrates how to fetch, insert, update, and delete data from the API in a clean and efficient way.
+This project was created for a tutorial on how to build a Flutter application that consumes a GraphQL API using Hasura. The application demonstrates how to fetch, insert, update, and delete data from the API in a clean and efficient way.
 
 ## Table of Contents
 
