@@ -63,6 +63,8 @@ docker-compose up -d
 | German | ge |
 | Italian | it |
 
+7. Reload Hasura metadata to get the new column from the settings menu placed in the right upper corner of the admin panel listening in the local port 8080.
+
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for more information.
