@@ -11,20 +11,18 @@ This project was created for a tutorial on how to build a Flutter application th
 
 ## Overview
 
-The tutorial covers the following topics:
+This project covers the following topics:
 
 - Setting up Hasura and configuring a PostgreSQL database
 - Creating GraphQL queries, mutations, and subscriptions
 - Integrating GraphQL in a Flutter application using `graphql_flutter`
 - Building a simple CRUD application that interacts with the API
-- Implementing real-time updates with GraphQL subscriptions
 
 ## Requirements
 
 - Flutter SDK (v2.5.0 or later)
 - Android Studio or Visual Studio Code with Flutter and Dart plugins
-- Hasura CLI (v2.0.0 or later)
-- Docker Desktop (for Hasura and PostgreSQL setup)
+- Docker (for Hasura and PostgreSQL setup)
 - A code editor, such as VSCode or Android Studio
 - An internet connection to access the Hasura Console
 
