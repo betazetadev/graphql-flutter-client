@@ -31,7 +31,7 @@ This project covers the following topics:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/flutter-graphql-hasura-tutorial.git
+git clone https://codeberg.org/betazetadev/graphql-flutter-client.git
 ```
 
 2. Change into the project directory:
