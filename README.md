@@ -36,15 +36,21 @@ git clone https://github.com/yourusername/flutter-graphql-hasura-tutorial.git
 
 2. Change into the project directory:
 
-> cd flutter-graphql-hasura-tutorial
+```bash
+cd flutter-graphql-hasura-tutorial
+```
 
 3. Install the dependencies:
 
-> flutter pub get
+```bash
+flutter pub get
+```
 
 4. Run the Docker container with Hasura and the PostgreSQL database:
 
-> docker-compose up -d
+```bash
+docker-compose up -d
+```
 
 ## License
 
