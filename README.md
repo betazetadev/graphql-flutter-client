@@ -52,6 +52,19 @@ flutter pub get
 docker-compose up -d
 ```
 
+5. Import and create the database information using [this](https://github.com/morenoh149/postgresDBSamples/tree/master/pagila-0.10.1) files connecting to the virtualized database
+
+6. Add a `code` column to the `language` table with the default value set to `gb` (they are used to show a flag next to the film information): 
+
+| Language | Code |
+| --- | --- |
+| English | gb |
+| Japanese | ja |
+| Mandarin | ma |
+| French | fr |
+| German | ge |
+| Italian | it |
+
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for more information.
