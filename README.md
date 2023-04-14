@@ -20,11 +20,9 @@ This project covers the following topics:
 
 ## Requirements
 
-- Flutter SDK (v2.5.0 or later)
-- Android Studio or Visual Studio Code with Flutter and Dart plugins
-- Docker (for Hasura and PostgreSQL setup)
-- A code editor, such as VSCode or Android Studio
-- An internet connection to access the Hasura Console
+- [Flutter](https://docs.flutter.dev/get-started/install) and [Dart](https://dart.dev/get-dart) SDK
+- [Android Studio](https://developer.android.com/studio) or [Visual Studio Code](https://code.visualstudio.com/) with Flutter and Dart plugins
+- [Docker](https://www.docker.com/) (for [Hasura](https://hasura.io/) and [PostgreSQL](https://www.postgresql.org/) setup)
 
 ## Installation
 
