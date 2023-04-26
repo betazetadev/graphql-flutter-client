@@ -68,3 +68,5 @@ docker-compose up -d
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for more information.
+
+![Buy me a coffee if you liked it](bmc_qr.png "Buy me a coffee if you liked it")
