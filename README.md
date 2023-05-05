@@ -69,4 +69,4 @@ docker-compose up -d
 
 This project is licensed under the MIT License. See the LICENSE file for more information.
 
-![Buy me a coffee if you liked it](bmc_qr.png "Buy me a coffee if you liked it")
+[<img src="bmc_qr.png">](https://www.buymeacoffee.com/betazetadev "Buy me a coffee if you liked it")
